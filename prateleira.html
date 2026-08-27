@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Selection Sort - Prateleira</title>
+</head>
+<body>
+  <canvas id="canvas" width="600" height="300"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function selectionSort(produtos) {
+      let n = produtos.length;
+
+      for (let i = 0; i < n - 1; i++) {
+        let minIndex = i;
+
+        for (let j = i + 1; j < n; j++) {
+          if (produtos[j].validade < produtos[minIndex].validade) {
+            minIndex = j;
+          }
+        }
+
+        if (minIndex !== i) {
+          [produtos[i], produtos[minIndex]] = [produtos[minIndex], produtos[i]];
+        }
+
+        // Desenhar estado atual
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        produtos.forEach((p, idx) => {
+          ctx.fillStyle = idx === i ? "orange" : idx === minIndex ? "red" : "blue";
+          ctx.fillRect(50 + idx * 100, 200 - p.validade * 10, 50, p.validade * 10);
+          ctx.fillStyle = "black";
+          ctx.fillText(p.produto, 50 + idx * 100, 220);
+          ctx.fillText(`${p.validade}d`, 50 + idx * 100, 240);
+        });
+
+        await sleep(1500);
+      }
+    }
+
+    let prateleira = [
+      { produto: "Leite", validade: 5 },
+      { produto: "Iogurte", validade: 2 },
+      { produto: "Queijo", validade: 15 },
+      { produto: "Pão", validade: 1 },
+      { produto: "Suco", validade: 7 }
+    ];
+
+    selectionSort(prateleira);
+  </script>
+</body>
+</html>
